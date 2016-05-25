@@ -38,13 +38,17 @@ app.post('/webhook/', function (req, res) {
                console.log(event.optin);
                console.log(event.ref);
             }
-            sendTextMessage(sender, "Text received, echo: "+ text.substring(0, 200));
 
             for (var prop in event) {
                 console.log(prop + " = " + event[prop]);
             }
             console.log(event);
-            console.log(event[0]);       
+            console.log(event[0]);  
+            
+            sendTextMessage(sender, "Text received, echo: "+ text.substring(0, 200));
+
+
+                 
         }
     }
     res.sendStatus(200);
