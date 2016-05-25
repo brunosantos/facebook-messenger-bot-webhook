@@ -22,7 +22,7 @@ app.get('/webhook', function (req, res) {
 });
 
 app.post('/webhook/', function (req, res) {
-    console.log (req.body);
+    // console.log (req.body);
     messaging_events = req.body.entry[0].messaging;
     for (i = 0; i < messaging_events.length; i++) {
         event = req.body.entry[0].messaging[i];
@@ -34,21 +34,22 @@ app.post('/webhook/', function (req, res) {
                 sendGenericMessage(sender)
                 continue
             }
+
+            console.log('WORK');
             if (event.optin) {
                console.log(event.optin);
-               console.log(event.ref);
+               console.log(event.optin.ref);
             }
 
             for (var prop in event) {
                 console.log(prop + " = " + event[prop]);
             }
-            console.log(event);
-            console.log(event[0]);  
-            
-            sendTextMessage(sender, "Text received, echo: "+ text.substring(0, 200));
+            console.log('event sender'+event.sender);
+            console.log('event recipient'+event.recipient);
 
+            // console.log('event[0]'+event[0]);  
 
-                 
+            sendTextMessage(sender, "Text received, echo: "+ text.substring(0, 200));                 
         }
     }
     res.sendStatus(200);
@@ -110,7 +111,7 @@ function sendGenericMessage(sender) {
     }
     request({
         url: 'https://graph.facebook.com/v2.6/me/messages',
-        qs: {access_token:token},
+        qs: {access_token:app.get('page_access_token')},
         method: 'POST',
         json: {
             recipient: {id:sender},
