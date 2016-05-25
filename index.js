@@ -27,6 +27,11 @@ app.post('/webhook/', function (req, res) {
     for (i = 0; i < messaging_events.length; i++) {
         event = req.body.entry[0].messaging[i];
         sender = event.sender.id;
+
+        if (event.optin) {
+           console.log(event.optin);
+           console.log(event.optin.ref);
+        }
         if (event.message && event.message.text) {
             text = event.message.text;
             // Your Logic Replaces the following Line
@@ -36,16 +41,13 @@ app.post('/webhook/', function (req, res) {
             }
 
             console.log('WORK');
-            if (event.optin) {
-               console.log(event.optin);
-               console.log(event.optin.ref);
-            }
+
 
             for (var prop in event) {
                 console.log(prop + " = " + event[prop]);
             }
-            console.log('event sender'+event.sender);
-            console.log('event recipient'+event.recipient);
+            console.log('event sender id:'+sender);
+            console.log('event recipient:'+event.recipient.id);
 
             // console.log('event[0]'+event[0]);  
 
