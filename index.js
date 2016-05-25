@@ -29,6 +29,8 @@ app.post('/webhook/', function (req, res) {
         sender = event.sender.id;
 
         if (event.optin) {
+            console.log('event sender id:'+sender);
+            console.log('event recipient:'+event.recipient.id);
            console.log(event.optin);
            console.log(event.optin.ref);
         }
@@ -42,14 +44,8 @@ app.post('/webhook/', function (req, res) {
 
             console.log('WORK');
 
-
-            for (var prop in event) {
-                console.log(prop + " = " + event[prop]);
-            }
             console.log('event sender id:'+sender);
             console.log('event recipient:'+event.recipient.id);
-
-            // console.log('event[0]'+event[0]);  
 
             sendTextMessage(sender, "Text received, echo: "+ text.substring(0, 200));                 
         }
