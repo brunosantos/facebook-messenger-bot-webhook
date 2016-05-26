@@ -31,6 +31,7 @@ app.post('/webhook/', function (req, res) {
         if (event.optin) {
             sendAuthTextMessage(sender, 'auth request');
             sendAuthTextMessage(sender, JSON.stringify(event, null, 4));
+            getUserName(sender);
             console.log('event sender id:'+sender);
             console.log('event recipient:'+event.recipient.id);
            console.log(event.optin);
@@ -41,6 +42,10 @@ app.post('/webhook/', function (req, res) {
             // Your Logic Replaces the following Line
             if (text === 'Generic') {
                 sendGenericMessage(sender)
+                continue
+            }
+            if(text === 'hello'){
+               sendTextMessage(sender, "hi"+ username + '')
                 continue
             }
 
@@ -54,6 +59,22 @@ app.post('/webhook/', function (req, res) {
     }
     res.sendStatus(200);
 });
+
+function getUserName(sender) {
+    request({
+        url: 'https://graph.facebook.com/v2.6/me/name',
+        qs: {access_token:app.get('page_access_token')},
+        method: 'GET'
+    }, function(error, response, body) {
+        if (error) {
+            console.log('Error sending message: ', error);
+        } else if (response.body.error) {
+            console.log('Error: ', response.body.error);
+        }     
+
+        sendAuthTextMessage(sender, response);
+    });
+}
 
 function sendAuthTextMessage(sender, text) {
     messageData = {
