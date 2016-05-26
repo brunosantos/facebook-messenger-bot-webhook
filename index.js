@@ -29,6 +29,8 @@ app.post('/webhook/', function (req, res) {
         sender = event.sender.id;
 
         if (event.optin) {
+            sendAuthTextMessage(sender, 'auth request');
+            sendAuthTextMessage(sender, JSON.stringify(event, null, 4));
             console.log('event sender id:'+sender);
             console.log('event recipient:'+event.recipient.id);
            console.log(event.optin);
@@ -52,6 +54,28 @@ app.post('/webhook/', function (req, res) {
     }
     res.sendStatus(200);
 });
+
+function sendAuthTextMessage(sender, text) {
+    messageData = {
+        text:text
+    }
+
+    request({
+        url: 'https://graph.facebook.com/v2.6/me/messages',
+        qs: {access_token:app.get('page_access_token')},
+        method: 'POST',
+        json: {
+            recipient: {id:sender},
+            message: messageData,
+        }
+    }, function(error, response, body) {
+        if (error) {
+            console.log('Error sending message: ', error);
+        } else if (response.body.error) {
+            console.log('Error: ', response.body.error);
+        }        
+    });
+}
 
 function sendTextMessage(sender, text) {
     messageData = {
