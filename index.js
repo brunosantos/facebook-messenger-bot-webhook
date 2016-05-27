@@ -15,7 +15,7 @@ app.get('/', function (req, res) {
 
 app.get('/webhook', function (req, res) {
     console.log(req.query);
-    console.log("ip:"+request.connection.remoteAddress);
+    console.log("ip:"+req.connection.remoteAddress);
     if (req.query['hub.verify_token'] === app.get('verify_token')) {
         res.send(req.query['hub.challenge']);
     } else {
